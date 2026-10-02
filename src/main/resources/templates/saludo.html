@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<!-- Vista Thymeleaf que recibe el nombre "user" desde SaludoController. -->
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Saludo personalizado</title>
+</head>
+<body>
+    <main>
+        <!-- th:text inserta el valor como texto escapado, no como HTML ejecutable. -->
+        <h1 th:text="'¡Hola, ' + ${user} + '!'">¡Hola!</h1>
+    </main>
+</body>
+</html>
