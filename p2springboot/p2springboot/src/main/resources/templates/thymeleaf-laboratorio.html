@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<!--
+    Plantilla natural: sigue siendo HTML legible en un editor o navegador,
+    y Thymeleaf sustituye los atributos th:* cuando Spring renderiza la vista.
+-->
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Laboratorio Thymeleaf · P2</title>
+    <style>
+        :root {
+            color-scheme: light;
+            --ink: #282722;
+            --muted: #706e66;
+            --paper: #faf9f6;
+            --line: #dedbd2;
+            --accent: #a34732;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            background: var(--paper);
+            color: var(--ink);
+            font: 16px/1.65 Georgia, "Times New Roman", serif;
+        }
+
+        .page { width: min(880px, calc(100% - 40px)); margin: 0 auto; }
+
+        .hero {
+            margin: 54px 0 36px;
+            padding-bottom: 25px;
+            border-bottom: 2px solid var(--ink);
+        }
+
+        .eyebrow {
+            color: var(--accent);
+            font-family: "Segoe UI", Arial, sans-serif;
+            font-size: .82rem;
+            font-weight: 700;
+        }
+
+        h1 { margin: 8px 0; font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 500; letter-spacing: -.035em; line-height: 1.12; }
+        .hero p { max-width: 650px; margin: 12px 0 0; color: var(--muted); font-size: 1.08rem; }
+        .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 42px; row-gap: 35px; }
+
+        .card {
+            padding-top: 17px;
+            border-top: 1px solid var(--line);
+        }
+
+        .wide { grid-column: 1 / -1; }
+        .number { color: var(--accent); font-family: "Segoe UI", Arial, sans-serif; font-size: .78rem; font-weight: 700; letter-spacing: .06em; }
+        h2 { margin: 5px 0 8px; font-size: 1.42rem; font-weight: 600; }
+        .hint { margin-top: 0; color: var(--muted); }
+        .code { color: #7b3d2d; font-family: Consolas, "Courier New", monospace; font-size: .9em; }
+
+        .welcome {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 12px 0;
+            border-top: 1px solid var(--line);
+            border-bottom: 1px solid var(--line);
+        }
+
+        .welcome strong { font-size: 1.2rem; }
+        .tag { color: var(--muted); font-family: "Segoe UI", Arial, sans-serif; font-size: .85rem; }
+        .list { display: grid; gap: 0; margin: 12px 0 0; padding: 0; list-style: none; }
+
+        .list li {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 9px 0;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .index { display: grid; width: 25px; height: 25px; flex: 0 0 25px; place-items: center; border: 1px solid var(--line); color: var(--accent); font-family: "Segoe UI", Arial, sans-serif; font-size: .76rem; }
+        .pill { margin-left: auto; color: var(--muted); font-family: "Segoe UI", Arial, sans-serif; font-size: .72rem; }
+        .note { margin: 32px 0 42px; padding-top: 14px; border-top: 2px solid var(--ink); color: var(--muted); font-size: .9rem; }
+
+        @media (max-width: 700px) {
+            .grid { grid-template-columns: 1fr; }
+            .wide { grid-column: auto; }
+            .hero { margin-top: 30px; }
+        }
+    </style>
+</head>
+<body>
+<main class="page">
+    <header class="hero">
+        <div class="eyebrow">P2 · Spring Boot</div>
+        <h1>Valores y listas con Thymeleaf</h1>
+        <p>Cómo pasar datos sencillos desde un controlador y utilizarlos al generar HTML en el servidor.</p>
+    </header>
+
+    <div class="grid">
+        <section class="card">
+            <div class="number">01 / VARIABLES</div>
+            <h2>Valores dentro del HTML</h2>
+            <p class="hint">Usa <span class="code">th:text</span> para insertar texto y expresiones para consultar valores.</p>
+
+            <div class="welcome">
+                <!-- th:text sustituye el contenido y escapa el texto para que no se interprete como HTML. -->
+                <strong th:text="'¡Bienvenido, ' + ${alumno} + '!'">¡Bienvenido, estudiante!</strong>
+                <span class="tag" th:text="${modulo}">Thymeleaf</span>
+            </div>
+
+            <p>
+                Lección <strong th:text="${numeroLeccion}">2</strong>
+                <span th:if="${hayClase}">· Hoy hay clase</span>
+                <span th:unless="${hayClase}">· Hoy no hay clase</span>
+            </p>
+            <p class="hint">
+                Prueba el parámetro de la URL:
+                <span class="code">/?alumno=Ana</span>
+            </p>
+        </section>
+
+        <section class="card">
+            <div class="number">02 / LISTAS</div>
+            <h2>Recorrer con th:each</h2>
+            <p class="hint">
+                <span class="code">th:each</span> recorre elementos; el estado opcional permite conocer su índice y posición.
+            </p>
+
+            <p>
+                Temas de hoy:
+                <strong th:text="${#lists.size(temas)}">4</strong>
+            </p>
+
+            <ul class="list">
+                <!-- temas contiene Strings simples. temaEstado es el estado de iteración (índice, primero, último, etc.). -->
+                <li th:each="tema, temaEstado : ${temas}">
+                    <span class="index" th:text="${temaEstado.count}">1</span>
+                    <span th:text="${tema}">Mostrar texto con th:text</span>
+                    <span class="pill" th:if="${temaEstado.first}">PRIMERO</span>
+                    <span class="pill" th:if="${temaEstado.last}">ÚLTIMO</span>
+                </li>
+            </ul>
+            <p class="hint">
+                Las utilidades de listas también pueden comprobar si hay elementos o si uno concreto está incluido:
+                <span class="code">#lists.isEmpty(temas)</span> y
+                <span class="code">#lists.contains(temas, '...')</span>.
+                Por ejemplo, permiten decidir si mostrar “No hay resultados” o destacar una opción.
+            </p>
+        </section>
+
+        <section class="card wide">
+            <div class="number">03 / UTILIDADES DE THYMELEAF</div>
+            <h2>Pequeños ayudantes disponibles en la plantilla</h2>
+            <p class="hint">
+                Los nombres que empiezan por <span class="code">#</span> son objetos de utilidad que Thymeleaf
+                pone a disposición de las expresiones: no hay que crearlos ni enviarlos desde el controlador.
+                Sirven para tareas habituales de presentación, sin convertir la plantilla en el lugar de la lógica de negocio.
+            </p>
+            <p>
+                <strong>Dar formato a números:</strong>
+                <span class="code">#numbers.formatDecimal(1234.5, 1, 2)</span>
+                muestra un decimal con dos cifras decimales
+                (<span th:text="${#numbers.formatDecimal(1234.5, 1, 2)}">1.234,50</span>).
+                Útil, por ejemplo, para presentar precios o notas de forma legible.
+            </p>
+
+            <!--
+                #numbers, #lists y otros #... son objetos de utilidad del dialecto estándar de Thymeleaf;
+                no son tipos de Spring Boot ni datos que haya que añadir al Model. Por ejemplo:
+                #numbers.formatDecimal(...) da formato a cantidades y #numbers.sequence(...) genera rangos.
+                La lista de utilidades disponibles está en el apéndice A de la documentación enlazada abajo.
+            -->
+            <ul class="list">
+                <li th:each="minutos, estado : ${duraciones}">
+                    <span class="index" th:text="${estado.index}">0</span>
+                    <span><strong th:text="${minutos}">15</strong> minutos</span>
+                    <span class="pill" th:text="${estado.even} ? 'posición par' : 'posición impar'">posición par</span>
+                </li>
+            </ul>
+            <!--
+                #numbers es un objeto de utilidad integrado en el dialecto estándar de Thymeleaf,
+                no una característica propia de Spring Boot. La API se documenta en:
+                https://www.thymeleaf.org/doc/tutorials/3.1/usingthymeleaf.html#appendix-a-expression-utility-objects
+            -->
+            <p class="hint">
+                <strong>Crear una secuencia sin prepararla en Java:</strong>
+                <span class="code">#numbers.sequence(1, 5)</span> genera los números del 1 al 5.
+                Es práctico para numerar páginas, filas o pasos:
+                <span class="code" th:each="numero : ${#numbers.sequence(1, 5)}">
+                    <span th:text="${numero}">1</span><span th:if="${!numeroStat.last}">, </span>
+                </span>
+            </p>
+        </section>
+    </div>
+
+    <footer class="note">
+        El controlador prepara datos básicos; Thymeleaf decide cómo presentarlos. No hay DTO, servicio ni base de datos.
+        <br>
+        Documentación:
+        <a href="https://docs.spring.io/spring-boot/reference/web/servlet.html#web.servlet.spring-mvc.template-engines"
+           target="_blank" rel="noopener noreferrer">motores de plantillas en Spring Boot</a>
+        ·
+        <a href="https://www.thymeleaf.org/doc/tutorials/3.1/usingthymeleaf.html#appendix-a-expression-utility-objects"
+           target="_blank" rel="noopener noreferrer">objetos de utilidad de Thymeleaf</a>
+    </footer>
+</main>
+</body>
+</html>
