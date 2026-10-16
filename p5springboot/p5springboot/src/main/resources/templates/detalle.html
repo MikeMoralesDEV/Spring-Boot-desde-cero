@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<!-- Segunda página para demostrar la reutilización de los mismos fragmentos. -->
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Detalle · P5</title>
+    <link rel="stylesheet" th:href="@{/css/p5.css}">
+</head>
+<body>
+<main class="page">
+    <!-- La cabecera compartida recibe otros textos para esta página. -->
+    <header th:replace="~{fragments/comun :: cabecera(
+            'Detalle del recurso',
+            'Esta vista vuelve a usar los fragmentos compartidos con parámetros diferentes.')}">
+        Cabecera común
+    </header>
+
+    <!-- El mismo fragmento cambia su estado activo según la página. -->
+    <nav th:replace="~{fragments/comun :: navegacion('detalle')}">Navegación común</nav>
+
+    <section class="grid">
+        <article class="card">
+            <div class="label">Fragmento parametrizado</div>
+            <h2>Imagen reutilizada en otra vista</h2>
+            <p>
+                El fragmento construye la estructura <code>figure/img/figcaption</code>.
+                Se puede invocar con distintas rutas, textos alternativos y leyendas.
+            </p>
+            <div th:replace="~{fragments/comun :: imagen(
+                    '/images/chikapu.jpg',
+                    'Peluche amarillo de personaje animado, sentado en una fotografía',
+                    'La leyenda contextualiza la imagen para todas las personas.')}">
+                Fragmento de imagen.
+            </div>
+        </article>
+
+        <article class="card">
+            <div class="label">Elegir una estrategia</div>
+            <h2>¿Cuándo usar cada procesador?</h2>
+            <ul>
+                <li><code>th:replace</code>: el fragmento define el elemento final; útil para cabeceras y pies.</li>
+                <li><code>th:insert</code>: conservar el elemento anfitrión como contenedor.</li>
+                <li><code>th:include</code> (obsoleto en Thymeleaf 3): no es la opción recomendada.</li>
+            </ul>
+            <p class="callout">
+                Pasar parámetros a un fragmento ayuda a reutilizar estructura manteniendo
+                títulos, estado de navegación y contenido específicos de cada vista.
+            </p>
+            <div class="button-row">
+                <a class="button primary" href="https://www.thymeleaf.org/doc/tutorials/3.1/usingthymeleaf.html"
+                   target="_blank" rel="noopener noreferrer">
+                    Consultar la documentación oficial
+                </a>
+            </div>
+        </article>
+    </section>
+
+    <footer th:replace="~{fragments/comun :: pie}">Pie común</footer>
+</main>
+</body>
+</html>

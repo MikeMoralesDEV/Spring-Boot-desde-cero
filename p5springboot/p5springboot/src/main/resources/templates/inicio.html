@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<!-- Catálogo principal que inserta cabecera, navegación, multimedia y pie compartidos. -->
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>P5 · Fragmentos y recursos</title>
+    <!-- @{} genera la ruta desde el contexto de la aplicación. -->
+    <link rel="stylesheet" th:href="@{/css/p5.css}">
+</head>
+<body>
+<main class="page">
+    <!-- th:replace sustituye este elemento por la raíz del fragmento de cabecera. -->
+    <div th:replace="~{fragments/comun :: cabecera(
+            'Reutilizar vistas y servir recursos',
+            'Una plantilla común, varias páginas, una imagen local y recursos estáticos con rutas robustas.')}">
+        Cabecera sustituida por el fragmento.
+    </div>
+
+    <!-- El mismo fragmento de navegación se comparte con la página de detalle. -->
+    <nav th:replace="~{fragments/comun :: navegacion('inicio')}">Navegación sustituida</nav>
+
+    <section class="grid">
+        <article class="card">
+            <div class="label">Fragmentos con parámetros</div>
+            <h2>La misma estructura, contenido reutilizable</h2>
+            <p>
+                La cabecera recibe título y descripción; la navegación recibe la ruta
+                activa. Los fragmentos se definen una vez y se procesan en ambas vistas.
+            </p>
+            <p>
+                <code>th:replace</code> reemplaza el elemento anfitrión; el fragmento
+                aporta su elemento raíz. Se usa para integrar la cabecera y la navegación.
+            </p>
+            <div class="button-row">
+                <a class="button primary" th:href="@{/detalle}">Abrir segunda vista</a>
+            </div>
+        </article>
+
+        <article class="card">
+            <div class="label">Recursos estáticos</div>
+            <h2>Imagen aportada como recurso local</h2>
+            <p>
+                El archivo está bajo <code>static/images/</code>. El fragmento multimedia
+                recibe la ruta y textos descriptivos; <code>@{...}</code> genera su URL
+                y el atributo <code>alt</code> aporta una alternativa accesible.
+            </p>
+            <!-- El fragmento recibe ruta, texto alternativo y pie de imagen. -->
+            <div th:replace="~{fragments/comun :: imagen(
+                    '/images/chikapu.jpg',
+                    'Peluche amarillo sentado, fotografiado sobre un fondo oscuro',
+                    'Imagen local servida desde static/images/chikapu.jpg.')}">
+                Imagen sustituida por el fragmento multimedia.
+            </div>
+        </article>
+
+        <article class="card wide">
+            <div class="label">Recursos estáticos habituales</div>
+            <h2>CSS, imágenes y JavaScript</h2>
+            <p>
+                Spring Boot publica por convención archivos de <code>static/</code>.
+                Se referencian con <code>th:href="@{/css/p5.css}"</code>,
+                <code>th:src="@{/images/chikapu.jpg}"</code> o
+                <code>th:src="@{/js/app.js}"</code>. Así las rutas también funcionan
+                si la aplicación se despliega bajo un prefijo de contexto.
+            </p>
+            <p class="callout">
+                Spring Boot sirve los archivos, pero no los comprime ni cambia su formato
+                automáticamente. La optimización se prepara antes de publicarlos.
+            </p>
+            <h3>Qué significa optimizar una imagen</h3>
+            <ul>
+                <li>
+                    <strong>Tamaño en píxeles:</strong> evita servir una imagen de miles de píxeles
+                    si solo se verá en una tarjeta pequeña. Usa una versión adecuada al espacio.
+                </li>
+                <li>
+                    <strong>Compresión:</strong> reduce bytes para que la descarga sea más rápida.
+                    En JPEG se puede ajustar la calidad: reducir demasiado produce artefactos.
+                </li>
+                <li>
+                    <strong>Formato:</strong> WebP y AVIF suelen ofrecer archivos más pequeños a
+                    calidad visual comparable; hay que comprobar compatibilidad y conservar una
+                    alternativa si el público o los navegadores lo requieren.
+                </li>
+                <li>
+                    <strong>Adaptación:</strong> CSS hace que la imagen quepa en la pantalla,
+                    pero no reduce por sí mismo el tamaño del archivo descargado.
+                </li>
+                <li>
+                    <strong>Carga:</strong> <code>loading="lazy"</code> aplaza imágenes fuera
+                    de pantalla. No se recomienda en la imagen principal que aparece al abrir la página.
+                </li>
+            </ul>
+            <p class="callout">
+                Esta imagen pesa aproximadamente 4 KB: ya es pequeña y no hace falta procesarla.
+                Para este ejercicio basta con observar sus propiedades; más adelante se puede
+                comparar el peso original y el optimizado con herramientas de imagen.
+            </p>
+            <div class="button-row">
+                <!-- Enlace absoluto externo, con nueva pestaña aislada de la página de origen. -->
+                <a class="button primary" href="https://www.thymeleaf.org/doc/tutorials/3.1/usingthymeleaf.html"
+                   target="_blank" rel="noopener noreferrer">
+                    Documentación externa de Thymeleaf
+                </a>
+            </div>
+            <p class="muted">
+                El enlace usa un <code>href</code> externo normal. Los enlaces internos y recursos
+                de la aplicación se generan con <code>th:href="@{...}"</code> o
+                <code>th:src="@{...}"</code>.
+            </p>
+        </article>
+    </section>
+
+    <section class="card">
+        <div class="label">th:replace frente a th:insert</div>
+        <h2>¿Qué pasa con el elemento anfitrión?</h2>
+        <p>
+            En el panel siguiente, <code>th:insert</code> conserva el <code>div</code>
+            anfitrión y coloca el fragmento dentro. En cambio, el elemento con
+            <code>th:replace</code> se sustituye por la raíz del fragmento.
+        </p>
+
+        <!-- El elemento anfitrión y su clase permanecen; el fragmento entra en el div interior. -->
+        <div class="host">
+            <span class="host-label">Este contenedor permanece alrededor del fragmento.</span>
+            <div th:insert="~{fragments/comun :: pie}">
+                Pie común insertado dentro del elemento anfitrión.
+            </div>
+        </div>
+
+        <p class="muted">
+            Las URLs de recursos estáticos y los enlaces también deben construirse
+            con el procesador URL <code>@{...}</code>; no son fragmentos de plantilla.
+        </p>
+    </section>
+
+    <!-- El pie común se reutiliza sin duplicar su contenido. -->
+    <footer th:replace="~{fragments/comun :: pie}">Pie común</footer>
+</main>
+</body>
+</html>

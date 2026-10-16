@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<!-- Fragmentos compartidos por las páginas de P5. -->
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<body>
+<!-- Parámetros de fragmento: cada página puede reutilizar la cabecera con textos distintos. -->
+<header class="hero" th:fragment="cabecera(titulo, descripcion)">
+    <div class="eyebrow">P5 · Spring Boot + Thymeleaf</div>
+    <h1 th:text="${titulo}">Título de la página</h1>
+    <p class="intro" th:text="${descripcion}">Descripción de la página.</p>
+</header>
+
+<!-- El fragmento de navegación señala la ruta activa que recibe como parámetro. -->
+<nav class="nav" aria-label="Navegación principal" th:fragment="navegacion(paginaActiva)">
+    <a th:href="@{/}" th:attr="aria-current=${paginaActiva == 'inicio'} ? 'page'">
+        Catálogo
+    </a>
+    <a th:href="@{/detalle}" th:attr="aria-current=${paginaActiva == 'detalle'} ? 'page'">
+        Detalle
+    </a>
+</nav>
+
+<footer class="footer" th:fragment="pie">
+    P5 · Los fragmentos evitan duplicar estructura; los recursos estáticos viven en
+    <code>static/</code> y se enlazan con <code>@{...}</code>.
+</footer>
+
+<!-- Fragmento multimedia parametrizado para reutilizar contenido sin copiar su estructura. -->
+<figure class="media" th:fragment="imagen(src, textoAlternativo, pie)">
+    <img th:src="@{${src}}" th:alt="${textoAlternativo}" loading="lazy">
+    <figcaption th:text="${pie}">Descripción de la imagen.</figcaption>
+</figure>
+</body>
+</html>
