@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<!-- Página de respaldo si no existe una plantilla específica para el estado HTTP. -->
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Error · P3</title>
+    <link rel="stylesheet" th:href="@{/css/p3.css}">
+</head>
+<body>
+<main class="page">
+    <section class="card error-card">
+        <div class="label">Página de error de respaldo</div>
+        <p class="status">HTTP <span th:text="${status}">Error</span></p>
+        <h1>No se pudo completar la petición</h1>
+        <p>Vuelve al inicio o inténtalo de nuevo más tarde.</p>
+        <p class="muted">Ruta: <code th:text="${path}">/ruta</code></p>
+        <div class="actions">
+            <a class="button" th:href="@{/}">Volver al inicio</a>
+        </div>
+    </section>
+</main>
+</body>
+</html>

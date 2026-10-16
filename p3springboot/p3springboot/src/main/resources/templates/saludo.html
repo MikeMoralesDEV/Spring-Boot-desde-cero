@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<!-- Respuesta que demuestra un parámetro de consulta enlazado con @RequestParam. -->
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Saludo · P3</title>
+    <link rel="stylesheet" th:href="@{/css/p3.css}">
+</head>
+<body>
+<main class="page">
+    <section class="card error-card">
+        <div class="label">GET · @RequestParam</div>
+        <!-- th:text muestra el valor como texto escapado, no como HTML ejecutable. -->
+        <h1 th:text="'¡Hola, ' + ${nombre} + '!'">¡Hola, estudiante!</h1>
+        <p>El nombre llegó como parámetro de consulta en la URL.</p>
+        <p class="callout">
+            Prueba <code>/saludo?nombre=Lucía</code> y observa el valor recibido.
+        </p>
+        <div class="actions">
+            <!-- Todas las vistas ofrecen navegación de vuelta con una URL generada. -->
+            <a class="button" th:href="@{/}">Volver al inicio</a>
+            <a class="button secondary" th:href="@{/saludo(nombre='Grace Hopper')}">
+                Probar otro nombre
+            </a>
+        </div>
+    </section>
+</main>
+</body>
+</html>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<!-- Página principal del laboratorio de enlaces y navegación de P3. -->
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>P3 · URLs y errores con Thymeleaf</title>
+    <!-- @{} resuelve el recurso estático teniendo en cuenta el contexto de la aplicación. -->
+    <link rel="stylesheet" th:href="@{/css/p3.css}">
+</head>
+<body>
+<main class="page">
+    <header class="hero">
+        <div class="eyebrow">P3 · Spring Boot + Thymeleaf</div>
+        <h1>URLs, navegación y errores</h1>
+        <p class="intro">
+            Pulsa los botones para observar cómo Thymeleaf construye enlaces con
+            <code>th:href</code>, cómo Spring recibe parámetros y cómo se muestran
+            páginas de error sin base de datos ni clases de dominio.
+        </p>
+    </header>
+
+    <div class="grid">
+        <section class="card">
+            <div class="label">01 · Enlace interno sencillo</div>
+            <h2>Ir a otra ruta</h2>
+            <p>
+                <code>th:href="@{/saludo}"</code> genera una URL relativa a la aplicación.
+                Es preferible a escribir una ruta fija en el HTML.
+            </p>
+            <div class="actions">
+                <!-- @{/saludo} permite que Thymeleaf construya la URL interna correctamente. -->
+                <a class="button" th:href="@{/saludo}">Saludo predeterminado</a>
+                <!-- Un fragmento también se puede combinar con una ruta generada por Thymeleaf. -->
+                <a class="button secondary" th:href="@{/#errores}">Saltar a errores</a>
+            </div>
+        </section>
+
+        <section class="card">
+            <div class="label">02 · Parámetro de consulta</div>
+            <h2>Pasar datos en la query string</h2>
+            <p>
+                <code>@{/saludo(nombre='Lucía')}</code> construye
+                <code>/saludo?nombre=Lucía</code>. El controlador lo recibe con
+                <code>@RequestParam</code>.
+            </p>
+            <div class="actions">
+                <!-- Thymeleaf codifica el parámetro al construir la URL. -->
+                <a class="button" th:href="@{/saludo(nombre=${nombreEjemplo})}">
+                    Saludar a <span th:text="${nombreEjemplo}">Lucía</span>
+                </a>
+                <!-- También se pueden proporcionar valores literales en los parámetros. -->
+                <a class="button secondary" th:href="@{/saludo(nombre='Ada Lovelace')}">
+                    Saludar a Ada Lovelace
+                </a>
+            </div>
+        </section>
+
+        <section class="card">
+            <div class="label">03 · Variable de ruta</div>
+            <h2>Un valor que forma parte de la ruta</h2>
+            <p>
+                <code>@{/alumnos/{id}(id=${idEjemplo})}</code> genera
+                <code>/alumnos/42</code>. El controlador lo recibe con
+                <code>@PathVariable</code>; no oculta el identificador.
+            </p>
+            <div class="actions">
+                <!-- El primer id es el marcador de la ruta; el argumento id= lo rellena. -->
+                <a class="button" th:href="@{/alumnos/{id}(id=${idEjemplo})}">
+                    Abrir alumno 42
+                </a>
+                <!-- Una ruta también puede llevar query params: /alumnos/42?vista=contacto. -->
+                <a class="button secondary"
+                   th:href="@{/alumnos/{id}(id=${idEjemplo}, vista='contacto')}">
+                    Alumno 42 · vista contacto
+                </a>
+            </div>
+        </section>
+
+        <section class="card">
+            <div class="label">04 · Enlace externo</div>
+            <h2>Navegar fuera de la aplicación</h2>
+            <p>
+                Las URLs externas pueden escribirse con <code>th:href</code> o como
+                un <code>href</code> HTML normal. <code>target</code> abre otra pestaña.
+            </p>
+            <div class="actions">
+                <!-- URL externa completa; rel evita que la pestaña nueva controle esta página. -->
+                <a class="button secondary"
+                   th:href="@{https://www.thymeleaf.org/}"
+                   target="_blank" rel="noopener noreferrer">
+                    Documentación de Thymeleaf
+                </a>
+            </div>
+        </section>
+
+        <section class="card wide" id="errores">
+            <div class="label">05 · Errores HTTP</div>
+            <h2>Probar páginas personalizadas</h2>
+            <p>
+                Cada botón provoca intencionadamente un estado HTTP de error.
+                Spring Boot busca plantillas específicas como <code>error/404.html</code>
+                y plantillas generales por familia, como <code>error/4xx.html</code>
+                y <code>error/5xx.html</code>.
+            </p>
+            <div class="actions">
+                <!-- Endpoint de demostración que responde con 400 Bad Request. -->
+                <a class="button danger" th:href="@{/demo/error/400}">Probar error 400</a>
+                <!-- Endpoint de demostración que responde con 403 Forbidden. -->
+                <a class="button danger" th:href="@{/demo/error/403}">Probar error 403</a>
+                <!-- Endpoint de demostración que responde con 404 Not Found. -->
+                <a class="button danger" th:href="@{/demo/error/404}">Probar error 404</a>
+                <!-- Endpoint de demostración que responde con 500 Internal Server Error. -->
+                <a class="button danger" th:href="@{/demo/error/500}">Probar error 500</a>
+                <!-- Esta ruta no está mapeada: el propio servidor debe producir un 404. -->
+                <a class="button secondary" th:href="@{/esta-ruta-no-existe}">
+                    Probar ruta inexistente
+                </a>
+            </div>
+            <p class="muted">
+                Las rutas 400 y 403 usan la plantilla general 4xx; la 404 tiene una
+                plantilla propia; la 500 usa la plantilla general 5xx.
+            </p>
+        </section>
+    </div>
+
+    <footer class="footer">
+        <strong>Idea clave:</strong> <code>${...}</code> lee datos del modelo;
+        <code>@{...}</code> construye URLs. Para parámetros sensibles no basta con
+        cambiar GET por POST: protege el transporte con HTTPS y valida siempre en el servidor.
+    </footer>
+</main>
+</body>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<!-- Vista para el ejemplo que combina una variable de ruta y un parámetro opcional. -->
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Alumno · P3</title>
+    <link rel="stylesheet" th:href="@{/css/p3.css}">
+</head>
+<body>
+<main class="page">
+    <section class="card error-card">
+        <div class="label">GET · @PathVariable + @RequestParam</div>
+        <h1>Ruta con identificador</h1>
+        <!-- th:text escapa los datos procedentes de la petición antes de mostrarlos. -->
+        <p>Identificador de alumno: <strong th:text="${id}">42</strong></p>
+        <p>Vista solicitada: <strong th:text="${vista}">resumen</strong></p>
+        <p class="callout">
+            El ID pertenece a <code>/alumnos/{id}</code>; la vista opcional está
+            después de <code>?</code>, por ejemplo <code>?vista=contacto</code>.
+            Ninguno de estos formatos oculta los valores.
+        </p>
+        <div class="actions">
+            <!-- Sustituye el marcador id de la ruta al construir el nuevo enlace. -->
+            <a class="button" th:href="@{/alumnos/{id}(id=7)}">Ver alumno 7</a>
+            <!-- Mantiene el id de la vista actual y cambia el parámetro de consulta. -->
+            <a class="button secondary"
+               th:href="@{/alumnos/{id}(id=${id}, vista='horario')}">Ver horario</a>
+            <a class="button secondary" th:href="@{/}">Volver al inicio</a>
+        </div>
+    </section>
+</main>
+</body>
+</html>
