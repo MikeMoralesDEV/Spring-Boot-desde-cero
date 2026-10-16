@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<!-- Resultado de una petición válida: estos datos siguen siendo solo del request actual. -->
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Solicitud recibida · P4</title>
+    <link rel="stylesheet" th:href="@{/css/p4.css}">
+</head>
+<body>
+<main class="page">
+    <header class="hero">
+        <div class="eyebrow">P4 · Resultado del POST</div>
+        <h1>Datos validados correctamente</h1>
+        <p class="intro">
+            El controlador recibió el objeto, validó sus propiedades y pasó el resultado
+            a esta vista. No se ha guardado en una base de datos.
+        </p>
+    </header>
+
+    <section class="card">
+        <div class="label">Datos enviados</div>
+        <h2 th:text="'Gracias, ' + ${solicitud.nombre}">Gracias</h2>
+        <dl class="result-list">
+            <dt>Correo</dt>
+            <!-- th:text inserta texto escapado; los valores no se interpretan como HTML. -->
+            <dd th:text="${solicitud.correo}">persona@example.com</dd>
+
+            <dt>Teléfono</dt>
+            <dd th:text="${solicitud.telefono != null and !solicitud.telefono.isBlank()
+                           ? solicitud.telefono : 'No indicado'}">No indicado</dd>
+
+            <dt>Tema</dt>
+            <dd th:text="${solicitud.tema}">CONSULTA</dd>
+
+            <dt>Canal preferido</dt>
+            <dd th:text="${solicitud.canal}">CORREO</dd>
+
+            <dt>Valoración</dt>
+            <dd th:text="${solicitud.valoracion}">5</dd>
+
+            <dt>Mensaje</dt>
+            <dd><pre th:text="${solicitud.mensaje}">Mensaje enviado</pre></dd>
+        </dl>
+        <p class="callout">
+            Esta vista recibe el objeto desde el modelo de la misma petición POST.
+            Al volver al formulario se crea otro objeto vacío; no existe historial de solicitudes.
+        </p>
+        <div class="actions">
+            <a class="button" th:href="@{/}">Volver al formulario</a>
+        </div>
+    </section>
+</main>
+</body>
+</html>

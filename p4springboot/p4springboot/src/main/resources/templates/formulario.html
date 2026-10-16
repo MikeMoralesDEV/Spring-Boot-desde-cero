@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<!-- Formulario de ejemplo: los valores se enlazan con SolicitudForm usando th:field. -->
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>P4 · Formularios y validación</title>
+    <!-- @{...} genera la URL del recurso estático respetando el contexto de la aplicación. -->
+    <link rel="stylesheet" th:href="@{/css/p4.css}">
+</head>
+<body>
+<main class="page">
+    <header class="hero">
+        <div class="eyebrow">P4 · Spring Boot + Thymeleaf</div>
+        <h1>Formularios y validación</h1>
+        <p class="intro">
+            Completa el formulario para ver el recorrido de los datos:
+            navegador → petición HTTP → objeto Java → validación del servidor
+            → vista de resultado.
+        </p>
+    </header>
+
+    <section class="card">
+        <div class="label">Dos formas de enlazar datos</div>
+        <h2>Comparar objeto de formulario y parámetros sueltos</h2>
+        <p>
+            Esta página usa <code>SolicitudForm</code> como DTO de entrada:
+            agrupa propiedades relacionadas para el binding y la validación.
+            El enlace al ejemplo sin DTO aparece una sola vez al final de esta comparación.
+        </p>
+        <div class="comparison">
+            <div>
+                <strong>DTO · ventajas</strong>
+                <ul>
+                    <li>Un objeto mantiene juntos los campos de un formulario.</li>
+                    <li><code>@Valid</code> y las anotaciones centralizan reglas reutilizables.</li>
+                    <li>La firma del controlador no crece con cada nuevo campo.</li>
+                </ul>
+            </div>
+            <div>
+                <strong>DTO · costes</strong>
+                <ul>
+                    <li>Requiere una clase adicional y sus propiedades/accessores.</li>
+                    <li>En un caso diminuto puede ser estructura innecesaria.</li>
+                    <li>No es una entidad: por sí mismo no guarda datos.</li>
+                </ul>
+            </div>
+        </div>
+        <div class="actions">
+            <a class="button secondary" th:href="@{/sin-dto}">Formulario sin DTO</a>
+        </div>
+        <p class="callout">
+            Ambos ejemplos usan el <code>Model</code> de Spring MVC para preparar la vista.
+            El Model es el contenedor MVC; no es el DTO. “Sin DTO” significa que el controlador
+            recibe los campos como parámetros escalares.
+        </p>
+    </section>
+
+    <section class="card">
+        <div class="label">th:object · th:field · th:errors</div>
+        <h2>Enviar una solicitud de contacto</h2>
+        <p class="hint">
+            Los errores se mostrarán junto al campo y el formulario conservará los
+            valores que se puedan enlazar.
+        </p>
+
+        <!--
+            th:object selecciona el objeto del modelo. Cada th:field enlaza un campo
+            HTML con una propiedad y genera su name, id y value apropiados.
+        -->
+        <form th:action="@{/enviar}" th:object="${solicitud}" method="post">
+            <!-- Errores globales de binding, además de los mensajes junto a cada campo. -->
+            <div class="error-summary" th:if="${#fields.hasGlobalErrors()}">
+                <strong>Hay un problema con el formulario:</strong>
+                <ul>
+                    <li th:each="error : ${#fields.globalErrors()}" th:text="${error}">Error general</li>
+                </ul>
+            </div>
+
+            <div class="form-grid">
+                <div class="field">
+                    <label for="nombre">Nombre</label>
+                    <!-- required y maxlength ayudan en el navegador; el servidor vuelve a validar. -->
+                    <input type="text" id="nombre" th:field="*{nombre}"
+                           autocomplete="name" required maxlength="60"
+                           th:errorclass="field-error">
+                    <p class="help">Máximo 60 caracteres.</p>
+                    <p class="error" th:errors="*{nombre}"></p>
+                </div>
+
+                <div class="field">
+                    <label for="correo">Correo electrónico</label>
+                    <!-- type=email puede comprobar formato en el navegador, no acredita que exista. -->
+                    <input type="email" id="correo" th:field="*{correo}"
+                           autocomplete="email" required maxlength="120"
+                           th:errorclass="field-error">
+                    <p class="help">Se comprueba el formato, no la existencia del buzón.</p>
+                    <p class="error" th:errors="*{correo}"></p>
+                </div>
+
+                <div class="field">
+                    <label for="telefono">Teléfono (opcional)</label>
+                    <!-- La regla adicional si se elige teléfono se aplica en el controlador. -->
+                    <input type="tel" id="telefono" th:field="*{telefono}"
+                           autocomplete="tel" maxlength="20"
+                           th:errorclass="field-error">
+                    <p class="help">Obligatorio si eliges contacto telefónico.</p>
+                    <p class="error" th:errors="*{telefono}"></p>
+                </div>
+
+                <div class="field">
+                    <label for="tema">Tema</label>
+                    <!-- th:each crea opciones a partir de valores sencillos entregados por el controlador. -->
+                    <select id="tema" th:field="*{tema}" required th:errorclass="field-error">
+                        <option value="">Selecciona un tema</option>
+                        <option th:each="temaDisponible : ${temasDisponibles}"
+                                th:value="${temaDisponible}"
+                                th:text="${temaDisponible}">CONSULTA</option>
+                    </select>
+                    <p class="error" th:errors="*{tema}"></p>
+                </div>
+
+                <fieldset class="field full">
+                    <legend>¿Cómo prefieres que te contactemos?</legend>
+                    <!-- th:field agrupa los radios que comparten una misma propiedad. -->
+                    <label class="choice" th:each="canalDisponible : ${canalesDisponibles}">
+                        <input type="radio" th:field="*{canal}" th:value="${canalDisponible}">
+                        <span th:text="${canalDisponible}">CORREO</span>
+                    </label>
+                    <p class="error" th:errors="*{canal}"></p>
+                </fieldset>
+
+                <div class="field full">
+                    <label for="mensaje">Mensaje</label>
+                    <!-- minlength/maxlength ayudan al usuario; @Size vuelve a imponer límites en servidor. -->
+                    <textarea id="mensaje" th:field="*{mensaje}" required
+                              minlength="20" maxlength="1000"
+                              th:errorclass="field-error"></textarea>
+                    <p class="help">Entre 20 y 1000 caracteres.</p>
+                    <p class="error" th:errors="*{mensaje}"></p>
+                </div>
+
+                <div class="field">
+                    <label for="valoracion">Valoración de esta página (1 a 5)</label>
+                    <!-- min/max restringen el control del navegador; @Min/@Max validan en el servidor. -->
+                    <input type="number" id="valoracion" th:field="*{valoracion}"
+                           required min="1" max="5" th:errorclass="field-error">
+                    <p class="error" th:errors="*{valoracion}"></p>
+                </div>
+
+                <div class="field">
+                    <span class="label">Consentimiento</span>
+                    <label class="check" for="aceptaPrivacidad">
+                        <!-- th:field genera el checkbox y el campo oculto auxiliar para el valor false. -->
+                        <input type="checkbox" id="aceptaPrivacidad"
+                               th:field="*{aceptaPrivacidad}" required>
+                        <span>Acepto el aviso de privacidad para enviar este ejemplo.</span>
+                    </label>
+                    <p class="error" th:errors="*{aceptaPrivacidad}"></p>
+                </div>
+            </div>
+
+            <div class="actions">
+                <button type="submit">Validar y ver resultado</button>
+                <!-- Enlace GET: recarga el formulario con un objeto vacío. -->
+                <a class="button secondary" th:href="@{/}">Limpiar formulario</a>
+            </div>
+        </form>
+    </section>
+
+    <section class="card">
+        <div class="label">Qué valida cada capa</div>
+        <h2>El navegador ayuda; el servidor decide</h2>
+        <p>
+            HTML puede avisar con <code>required</code>, <code>type=email</code>,
+            <code>min</code>, <code>max</code>, <code>minlength</code> y
+            <code>maxlength</code>. Esto mejora la experiencia, pero se puede omitir
+            desde el navegador o falsificar una petición.
+        </p>
+        <p>
+            Las anotaciones de <code>SolicitudForm</code> se ejecutan en el servidor
+            mediante <code>@Valid</code>; el controlador comprueba además que un teléfono
+            sea obligatorio cuando el canal elegido es TELEFONO. Toda regla relevante
+            debe comprobarse en el servidor.
+        </p>
+        <p class="callout warning">
+            Thymeleaf genera HTML y presenta valores/errores; no es una frontera de
+            seguridad ni sustituye la validación del controlador.
+        </p>
+    </section>
+
+    <section class="card">
+        <div class="label">Sin persistencia</div>
+        <h2>¿Dónde quedan los datos enviados?</h2>
+        <p>
+            Spring crea un <code>SolicitudForm</code> para la petición, lo rellena
+            y pasa el mismo objeto a la vista de resultado. Vive en memoria durante
+            el procesamiento de esa petición; no se escribe en un archivo ni en una base de datos.
+        </p>
+        <p>
+            Una variable local o un objeto en memoria desaparece al terminar su ciclo
+            de vida o al reiniciar la aplicación. Una variable global compartida no
+            es una solución: mezcla usuarios, puede sufrir accesos concurrentes y no
+            se comparte de forma fiable entre varias instancias de la aplicación.
+        </p>
+        <p>
+            Para conservar solicitudes entre peticiones, reinicios o instancias hace
+            falta persistirlas en un almacenamiento compartido, habitualmente una
+            base de datos. No todas las aplicaciones necesitan una base de datos:
+            este ejercicio no guarda nada porque su objetivo es practicar el flujo del formulario.
+        </p>
+        <p class="muted">
+            Al actualizar la vista de resultado, el navegador puede reenviar el POST.
+            En una aplicación real se suele valorar POST/Redirect/GET; los datos no
+            sobreviven al redireccionamiento por sí solos.
+        </p>
+    </section>
+
+    <footer class="footer">
+        <strong>Recorrido:</strong> <code>th:field</code> enlaza controles;
+        <code>@ModelAttribute</code> agrupa los valores recibidos;
+        <code>@Valid</code> ejecuta reglas del servidor;
+        <code>BindingResult</code> transporta errores;
+        <code>th:errors</code> los presenta.
+    </footer>
+</main>
+</body>
+</html>

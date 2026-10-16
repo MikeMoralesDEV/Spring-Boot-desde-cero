@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<!-- Variante de formulario que enlaza cada control con una variable independiente. -->
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>P4 · Formulario sin DTO</title>
+    <link rel="stylesheet" th:href="@{/css/p4.css}">
+</head>
+<body>
+<main class="page">
+    <header class="hero">
+        <div class="eyebrow">P4 · Sin DTO</div>
+        <h1>Campos individuales</h1>
+        <p class="intro">
+            Spring recibe cada valor como un <code>@RequestParam</code>. No hay un objeto
+            que agrupe el formulario; el controlador comprueba las reglas y prepara
+            errores sencillos para Thymeleaf.
+        </p>
+        <div class="actions">
+            <a class="button secondary" th:href="@{/}">Ver formulario con DTO</a>
+        </div>
+    </header>
+
+    <section class="card">
+        <div class="label">th:action · th:value · th:text</div>
+        <h2>Enviar una consulta breve</h2>
+        <p class="hint">
+            Los valores se pasan en campos separados. Si hay errores, el servidor
+            los devuelve como atributos individuales del modelo.
+        </p>
+
+        <!--
+            Esta plantilla no usa th:object ni th:field. Los name de los controles
+            corresponden a los nombres de los @RequestParam del controlador.
+        -->
+        <form th:action="@{/enviar-sin-dto}" method="post">
+            <div class="form-grid">
+                <div class="field">
+                    <label for="nombre">Nombre</label>
+                    <!-- th:value repuebla el campo; required y maxlength solo ayudan en el navegador. -->
+                    <input type="text" id="nombre" name="nombre"
+                           th:value="${nombre}" required maxlength="60" autocomplete="name"
+                           th:classappend="${errores['nombre'] != null} ? 'field-error'">
+                    <p class="error" th:if="${errores['nombre'] != null}"
+                       th:text="${errores['nombre']}">Error de nombre</p>
+                </div>
+
+                <div class="field">
+                    <label for="correo">Correo electrónico</label>
+                    <!-- El servidor también revisa el formato; type=email se puede eludir. -->
+                    <input type="email" id="correo" name="correo"
+                           th:value="${correo}" required maxlength="120" autocomplete="email"
+                           th:classappend="${errores['correo'] != null} ? 'field-error'">
+                    <p class="error" th:if="${errores['correo'] != null}"
+                       th:text="${errores['correo']}">Error de correo</p>
+                </div>
+
+                <div class="field full">
+                    <label for="comentario">Comentario</label>
+                    <!-- th:text escapa y vuelve a poner dentro del textarea el texto recibido. -->
+                    <textarea id="comentario" name="comentario" required
+                              minlength="20" maxlength="500"
+                              th:classappend="${errores['comentario'] != null} ? 'field-error'"
+                              th:text="${comentario}"></textarea>
+                    <p class="help">Entre 20 y 500 caracteres.</p>
+                    <p class="error" th:if="${errores['comentario'] != null}"
+                       th:text="${errores['comentario']}">Error de comentario</p>
+                </div>
+            </div>
+            <div class="actions">
+                <button type="submit">Validar y continuar</button>
+                <a class="button secondary" th:href="@{/sin-dto}">Limpiar</a>
+            </div>
+        </form>
+    </section>
+
+    <section class="card">
+        <div class="label">Comparación</div>
+        <h2>¿Qué cambia frente al DTO?</h2>
+        <div class="comparison">
+            <div>
+                <strong>Sin DTO</strong>
+                <ul>
+                    <li>La firma del controlador enumera cada <code>@RequestParam</code>.</li>
+                    <li>Hay que validar manualmente y mantener los mensajes de error.</li>
+                    <li>Al crecer el formulario, el método y el modelo se vuelven más verbosos.</li>
+                    <li>Puede ser suficiente para pocos campos y ejercicios introductorios.</li>
+                </ul>
+            </div>
+            <div>
+                <strong>Con DTO</strong>
+                <ul>
+                    <li>Un objeto agrupa los campos relacionados y hace más manejable el binding.</li>
+                    <li>Las anotaciones de Bean Validation expresan reglas junto a cada propiedad.</li>
+                    <li>Thymeleaf integra el objeto con <code>th:object</code>, <code>th:field</code> y <code>th:errors</code>.</li>
+                    <li>También hay que diseñarlo y mantenerlo; no se persiste por ser un DTO.</li>
+                </ul>
+            </div>
+        </div>
+        <p class="callout warning">
+            En los dos casos la validación decisiva está en el servidor. Las restricciones
+            HTML solo mejoran la experiencia y se pueden omitir.
+        </p>
+    </section>
+
+    <footer class="footer">
+        El objeto <code>Model</code> de Spring MVC sigue existiendo para renderizar
+        esta página: no es lo mismo que crear un DTO para agrupar los datos de entrada.
+    </footer>
+</main>
+</body>
+</html>
