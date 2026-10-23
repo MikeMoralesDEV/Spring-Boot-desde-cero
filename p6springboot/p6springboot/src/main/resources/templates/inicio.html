@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<!-- Vista de ejemplo: la estructura HTML es común y los textos se localizan con #{...}. -->
+<html lang="es" xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- El valor del título también se obtiene del archivo de mensajes. -->
+    <title th:text="#{page.title}">P6 · Internacionalización</title>
+    <link rel="stylesheet" th:href="@{/css/p6.css}">
+</head>
+<body>
+<main class="page">
+    <header class="hero">
+        <div class="eyebrow" th:text="#{page.eyebrow}">P6 · Spring Boot + Thymeleaf</div>
+        <h1 th:text="#{page.heading}">Una página, varios idiomas</h1>
+        <p class="intro" th:text="#{page.intro}">
+            El servidor genera esta vista con textos elegidos según el idioma de la petición.
+        </p>
+    </header>
+
+    <nav class="language" aria-label="Idioma" th:attr="aria-label=#{language.label}">
+        <span class="label" th:text="#{language.label}">Idioma</span>
+        <!-- El parámetro lang activa LocaleChangeInterceptor y guarda el Locale en la sesión. -->
+        <a class="button" th:href="@{/(lang='es')}" lang="es">Español</a>
+        <a class="button" th:href="@{/(lang='en')}" lang="en">English</a>
+    </nav>
+
+    <section class="card welcome">
+        <!-- #{welcome(${nombre})} busca "welcome" y le pasa el nombre como {0}. -->
+        <h2 th:text="#{welcome(${nombre})}">¡Bienvenido, Alex!</h2>
+        <p th:text="#{welcome.description}">
+            El nombre se recibe en el servidor y se inserta en un mensaje traducido.
+        </p>
+    </section>
+
+    <section class="grid">
+        <article class="card">
+            <div class="label" th:text="#{section.how.title}">¿Qué está ocurriendo?</div>
+            <ul>
+                <li th:text="#{section.how.first}">
+                    El controlador entrega el nombre, pero no decide el idioma de la página.
+                </li>
+                <li th:text="#{section.how.second}">
+                    Spring selecciona un Locale y Thymeleaf busca cada clave en los archivos messages.
+                </li>
+                <li th:text="#{section.how.third}">
+                    El texto de bienvenida usa una clave con un parámetro: el valor {0} se reemplaza por el nombre.
+                </li>
+            </ul>
+        </article>
+
+        <article class="card">
+            <div class="label" th:text="#{section.keys.title}">Claves de traducción</div>
+            <p th:text="#{section.keys.description}">
+                La plantilla referencia claves estables, no frases duplicadas en cada idioma.
+            </p>
+            <dl class="keys">
+                <dt th:text="#{key.page.heading}">page.heading</dt>
+                <dd>#{page.heading}</dd>
+                <dt th:text="#{key.welcome}">welcome</dt>
+                <dd>#{welcome(${nombre})}</dd>
+                <dt th:text="#{key.language.label}">language.label</dt>
+                <dd>#{language.label}</dd>
+            </dl>
+        </article>
+    </section>
+
+    <footer class="footer" th:text="#{footer}">
+        Los textos visibles están en archivos de mensajes; el contenido variable sigue llegando desde el modelo MVC.
+    </footer>
+</main>
+</body>
+</html>

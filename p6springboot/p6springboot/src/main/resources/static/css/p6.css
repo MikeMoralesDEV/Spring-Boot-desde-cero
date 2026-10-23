@@ -1,0 +1,157 @@
+:root {
+    color-scheme: light;
+    --ink: #263238;
+    --muted: #607078;
+    --paper: #f4f7f5;
+    --card: #ffffff;
+    --line: #d9e2de;
+    --accent: #28745b;
+    --accent-dark: #18533f;
+    --soft: #edf6f1;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font: 16px/1.65 "Segoe UI", Arial, sans-serif;
+}
+
+.page {
+    width: min(1000px, calc(100% - 36px));
+    margin: 0 auto;
+}
+
+.hero {
+    padding: 38px 0 24px;
+    border-bottom: 2px solid var(--ink);
+}
+
+.eyebrow,
+.label,
+.language > .label {
+    color: var(--accent);
+    font-size: .78rem;
+    font-weight: 750;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+h1 {
+    margin: 6px 0;
+    font-size: clamp(2rem, 5vw, 3.1rem);
+    line-height: 1.15;
+}
+
+h2 {
+    margin: 0 0 8px;
+    font-size: 1.45rem;
+}
+
+p {
+    margin: 8px 0;
+}
+
+.intro,
+.footer {
+    color: var(--muted);
+}
+
+.intro {
+    max-width: 780px;
+}
+
+.language {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    margin: 20px 0;
+}
+
+.language > .label {
+    margin-right: 4px;
+}
+
+.button {
+    display: inline-flex;
+    min-height: 42px;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 14px;
+    border: 1px solid var(--line);
+    border-radius: 7px;
+    background: var(--card);
+    color: var(--ink);
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.button:hover,
+.button:focus-visible {
+    border-color: var(--accent);
+    color: var(--accent-dark);
+}
+
+.card {
+    margin: 18px 0;
+    padding: 24px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--card);
+    box-shadow: 0 5px 16px rgb(38 50 56 / 5%);
+}
+
+.welcome {
+    border-left: 5px solid var(--accent);
+    background: var(--soft);
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+}
+
+li {
+    margin: 8px 0;
+}
+
+.keys {
+    display: grid;
+    grid-template-columns: minmax(120px, auto) 1fr;
+    gap: 8px 16px;
+    margin-bottom: 0;
+}
+
+.keys dt {
+    color: var(--accent-dark);
+    font-weight: 700;
+}
+
+.keys dd {
+    margin: 0;
+    font-family: Consolas, "Courier New", monospace;
+}
+
+.footer {
+    margin: 28px 0;
+    padding: 16px 0;
+    border-top: 1px solid var(--line);
+    font-size: .92rem;
+}
+
+@media (max-width: 720px) {
+    .grid {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+
+    .card {
+        padding: 18px;
+    }
+}

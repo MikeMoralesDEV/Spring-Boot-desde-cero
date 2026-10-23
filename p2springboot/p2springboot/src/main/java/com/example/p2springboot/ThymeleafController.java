@@ -23,7 +23,7 @@ public class ThymeleafController {
 		model.addAttribute("alumno", alumno);
 		model.addAttribute("modulo", "Thymeleaf");
 		model.addAttribute("numeroLeccion", 2);
-		model.addAttribute("hayClase", true);
+		model.addAttribute("hayClase", false);
 		model.addAttribute("temas", List.of(
 				"Mostrar texto con th:text",
 				"Evaluar condiciones con th:if",
