@@ -14,7 +14,7 @@ La calificación se asignará **por criterio**: cada criterio evaluado en las ta
 | **e)** Se han utilizado mecanismos de decisión en la creación de bloques de sentencias. | Usa decisiones en Java para resolver materiales y validar solicitudes, y una condición Thymeleaf para presentar el resultado según la duración. |
 | **f)** Se han utilizado bucles y se ha verificado su funcionamiento. | Recorre el array de materiales con `th:each` y comprueba que aparecen todos sus elementos. |
 | **g)** Se han añadido comentarios al código. | Incluye comentarios breves y útiles en Java y/o Thymeleaf para aclarar decisiones o partes relevantes. |
-| **h)** Se han utilizado herramientas y entornos para facilitar la programación, prueba y documentación del código. | Desarrolla y ejecuta el proyecto con un IDE o Spring Initializr, comprueba los casos de aceptación y documenta cómo ejecutarlo en el `README.md`. |
+| **h)** Se han utilizado herramientas y entornos para facilitar la programación, prueba y documentación del código. | Desarrolla y ejecuta el proyecto con un IDE o Spring Initializr, comprueba los casos de aceptación y documenta cómo ejecutarlo en el `../../../Spring-Boot-desde-cero/01-no-persistencia-ssr/README.md`. |
 
 ### Resultado de aprendizaje 3
 
@@ -86,7 +86,7 @@ La ruta `GET /solicitud/nueva` mostrará un formulario con estos campos:
 14. Crea y utiliza un método auxiliar Java para calcular y mostrar el número de días del préstamo (contando los días de recogida y devolución) y el total de días-unidad (días del préstamo multiplicados por unidades). Usa tipos numéricos adecuados.
 15. En la plantilla de resultado, utiliza una condición Thymeleaf para distinguir entre un préstamo de un día y uno de varios días, y presenta un mensaje adecuado en cada caso.
 
-En el código, utiliza y permite identificar parámetros de método, variables locales y propiedades del DTO. En el `README.md`, describe brevemente el ámbito de cada uno y cómo los atributos del modelo se utilizan en la vista.
+En el código, utiliza y permite identificar parámetros de método, variables locales y propiedades del DTO. En el `../../../Spring-Boot-desde-cero/01-no-persistencia-ssr/README.md`, describe brevemente el ámbito de cada uno y cómo los atributos del modelo se utilizan en la vista.
 
 Para las fechas, usa campos `LocalDate` y enlázalos con el formato ISO de los controles HTML de fecha. Aplica una validación de fecha presente o futura en el servidor; no basta con configurar el atributo `min` del navegador.
 
@@ -138,7 +138,7 @@ Entrega el proyecto completo y ejecutable, incluyendo:
 - Código Java del controlador y del DTO.
 - Plantillas Thymeleaf para catálogo, ficha, formulario, resultado y errores.
 - Recursos estáticos utilizados.
-- Un `README.md` breve con los requisitos para ejecutar el proyecto, las rutas principales y las comprobaciones realizadas.
+- Un `../../../Spring-Boot-desde-cero/01-no-persistencia-ssr/README.md` breve con los requisitos para ejecutar el proyecto, las rutas principales y las comprobaciones realizadas.
 
 ## Calificación por criterio
 
@@ -152,7 +152,7 @@ Se asignará **una nota independiente de 0 a 10 a cada uno de los 14 criterios e
 | RA2 | e) Mecanismos de decisión | Las decisiones Java de búsqueda y validación, así como la condición Thymeleaf del resultado, funcionan correctamente. | /10 |
 | RA2 | f) Bucles | El recorrido Thymeleaf del array presenta todos los materiales sin omisiones ni errores. | /10 |
 | RA2 | g) Comentarios | Los comentarios son correctos, útiles y aclaran decisiones relevantes sin limitarse a repetir el código. | /10 |
-| RA2 | h) Herramientas, pruebas y documentación | El proyecto se ejecuta; se comprueban los casos de aceptación y el `README.md` explica cómo ejecutarlo y las comprobaciones realizadas. | /10 |
+| RA2 | h) Herramientas, pruebas y documentación | El proyecto se ejecuta; se comprueban los casos de aceptación y el `../../../Spring-Boot-desde-cero/01-no-persistencia-ssr/README.md` explica cómo ejecutarlo y las comprobaciones realizadas. | /10 |
 | RA3 | a) Mecanismos de decisión | Distingue correctamente los casos de material encontrado/no encontrado y solicitud válida/no válida. | /10 |
 | RA3 | b) Bucles y verificación | Recorre el array con Thymeleaf y comprueba que se muestra cada material. | /10 |
 | RA3 | c) Arrays para almacenar y recuperar datos | Declara el array, lo proporciona a la vista, lo recorre y recupera materiales por código correctamente. | /10 |

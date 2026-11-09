@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<!-- Thymeleaf procesa los atributos th:* al renderizar esta plantilla en el servidor. -->
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Primer modelo · Spring Boot</title>
+    <link rel="stylesheet" th:href="@{/css/recursos.css}">
+</head>
+<body>
+<main class="page">
+    <header class="hero">
+        <p class="eyebrow">P2 · PERSISTENCIA · PRIMER MODELO</p>
+        <h1>Objetos del aula maker</h1>
+        <p>
+            Cada tarjeta se genera a partir de un objeto Java de la clase
+            <code>Recurso</code>. Por ahora, los objetos viven solo en memoria.
+        </p>
+    </header>
+
+    <section class="summary" aria-label="Resumen del ejemplo">
+        <div>
+            <span class="label">Objetos recibidos por la vista</span>
+            <strong th:text="${#lists.size(recursos)}">3</strong>
+        </div>
+        <p>
+            El controlador entrega la colección en el <code>Model</code> de Spring MVC.
+            Thymeleaf recorre esa colección; no consulta ninguna base de datos.
+        </p>
+    </section>
+
+    <section class="catalog" aria-label="Catálogo de recursos">
+        <!-- Cada vuelta de th:each asigna un objeto Recurso a la variable recurso. -->
+        <article class="card" th:each="recurso : ${recursos}">
+            <div class="card-top">
+                <span class="category" th:text="${recurso.categoria}">Categoría</span>
+                <span class="availability"
+                      th:classappend="${recurso.disponible} ? ' available' : ' unavailable'"
+                      th:text="${recurso.disponible} ? 'Disponible' : 'No disponible'">
+                    Disponible
+                </span>
+            </div>
+
+            <!-- Thymeleaf lee las propiedades usando los getters de Recurso. -->
+            <p class="identifier">
+                Recurso <span th:text="${recurso.id}">1</span>
+            </p>
+            <h2 th:text="${recurso.nombre}">Nombre del recurso</h2>
+            <p class="description" th:text="${recurso.descripcion}">
+                Descripción del recurso.
+            </p>
+        </article>
+    </section>
+
+    <aside class="note">
+        <h2>¿Qué representa cada parte?</h2>
+        <ul>
+            <li><code>Recurso</code> es una clase Java que describe los datos de un recurso.</li>
+            <li>Cada objeto contiene sus propios valores, como nombre y categoría.</li>
+            <li><code>recursos</code> es una lista de objetos que el controlador prepara en memoria.</li>
+            <li><code>Model</code> es el contenedor MVC que permite a Thymeleaf recibir esa lista.</li>
+        </ul>
+        <p>
+            Todavía no hay una entidad JPA ni una tabla asociada: cerrar y volver a iniciar
+            la aplicación no guarda ni recupera cambios.
+        </p>
+    </aside>
+
+    <footer>
+        <span>Spring Boot · Spring MVC · Thymeleaf</span>
+        <span>Sin formularios y sin persistencia en esta práctica.</span>
+    </footer>
+</main>
+</body>
+</html>
