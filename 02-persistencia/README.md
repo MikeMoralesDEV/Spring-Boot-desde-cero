@@ -5,7 +5,7 @@ Esta fase parte de lo que ya se ha trabajado en `01-no-persistencia-ssr` y de lo
 ## Índice de trabajo
 
 1. **Introducción al ORM y al mapeo objeto-relacional** — conceptos, vocabulario y papel de JPA, Hibernate y Spring Data JPA. Material: [P1 ORM](p1-orm/01-introduccion-orm.md).
-2. **Primer modelo sencillo, sin relaciones** — introducir una clase propia y sus objetos, diferenciarlos de las colecciones simples y del `Model` de Spring MVC. Aplicación: [P2 Primer modelo](p2-PrimerModelo/README.md).
+2. **Primer modelo sencillo, sin relaciones** — mapear una clase propia con Hibernate ORM y crear el esquema al iniciar. Sin servidor web, repositorios, servicios ni formularios. Aplicación: [P2 Primer modelo](p2-PrimerModelo/README.md).
 3. **Configuración de persistencia e Hibernate** — conexión de la aplicación a una base de datos local y opciones de gestión del esquema. Material: [guía de configuración de Hibernate](p1-orm/02-configuracion-hibernate.md).
 4. **Operaciones de persistencia y consultas iniciales** — repositorios, operaciones básicas y formas de expresar consultas. Se estudian juntas para que las consultas se entiendan en el contexto de la recuperación y modificación de datos.
 5. **Integración web, validación y reglas de la aplicación** — conectar operaciones reales con las vistas y formularios que hagan falta; separar los datos de entrada de las entidades y situar las validaciones y reglas en la capa apropiada.
@@ -18,8 +18,8 @@ El orden es una propuesta de organización, no un enunciado cerrado. En especial
 ## Material y proyectos disponibles
 
 - `p1-orm`: guías de estudio para el alumnado; la presentación se añadirá aparte.
-- `p2-PrimerModelo`: aplicación Spring Boot ejecutable que presenta objetos de un modelo sencillo en memoria. No utiliza ORM ni persiste información.
+- `p2-PrimerModelo`: aplicación Spring Boot mínima con una entidad Hibernate y creación automática del esquema en H2 local. No incluye capa web ni operaciones de datos.
 
 Las guías no prescriben un único motor de base de datos. Cada estudiante podrá utilizar una base de datos relacional disponible localmente; los ejemplos de clase podrán elegir un motor de referencia y señalar sus diferencias cuando importen.
 
-La configuración real de Hibernate y la conexión a una base de datos se abordarán después de conocer el primer modelo.
+La configuración avanzada de Hibernate y las decisiones sobre esquemas se estudian en el apartado 3.

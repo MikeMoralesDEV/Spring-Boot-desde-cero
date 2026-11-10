@@ -13,38 +13,63 @@
 	<artifactId>p2-primer-modelo</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>p2-PrimerModelo</name>
-	<description>Introducción a clases de modelo y objetos en memoria</description>
+	<description>Mapeo de una entidad y creación automática del esquema</description>
 
 	<properties>
 		<java.version>23</java.version>
 	</properties>
 
 	<dependencies>
-		<!-- Spring MVC recibe peticiones y selecciona la vista que se renderizará. -->
+		<!-- Boot configura JPA e Hibernate automáticamente; no se declara ningún repositorio. -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-webmvc</artifactId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
-		<!-- Thymeleaf muestra en HTML los objetos preparados por el controlador. -->
+		<!-- H2 crea una base de datos local en archivo, sin instalar un servidor. -->
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>runtime</scope>
 		</dependency>
-		<!-- Dependencias de prueba para MVC y plantillas Thymeleaf. -->
+		<!-- Lombok genera los métodos repetitivos de la entidad durante la compilación. -->
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-thymeleaf-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-webmvc-test</artifactId>
-			<scope>test</scope>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 
 	<build>
 		<plugins>
+			<!-- Configura Lombok como procesador para generar métodos durante la compilación. -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>default-compile</id>
+						<configuration>
+							<annotationProcessorPaths>
+								<path>
+									<groupId>org.projectlombok</groupId>
+									<artifactId>lombok</artifactId>
+								</path>
+							</annotationProcessorPaths>
+						</configuration>
+					</execution>
+					<execution>
+						<id>default-testCompile</id>
+						<configuration>
+							<annotationProcessorPaths>
+								<path>
+									<groupId>org.projectlombok</groupId>
+									<artifactId>lombok</artifactId>
+								</path>
+							</annotationProcessorPaths>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>

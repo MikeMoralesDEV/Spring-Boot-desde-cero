@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
- * Punto de entrada de la aplicación P2 Primer Modelo.
+ * Punto de entrada de P2 Primer Modelo.
  *
- * Spring Boot configura el servidor web y busca los componentes de la
- * aplicación dentro de este paquete y sus subpaquetes.
+ * Spring Boot configura JPA/Hibernate y detecta la entidad Recurso.
+ * Hibernate crea el esquema al arrancar según las propiedades de la aplicación.
  */
 @SpringBootApplication
 public class P2PrimerModeloApplication {
