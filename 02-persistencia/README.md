@@ -5,8 +5,8 @@ Esta fase parte de lo que ya se ha trabajado en `01-no-persistencia-ssr` y de lo
 ## Índice de trabajo
 
 1. **Introducción al ORM y al mapeo objeto-relacional** — conceptos, vocabulario y papel de JPA, Hibernate y Spring Data JPA. Material: [P1 ORM](p1-orm/01-introduccion-orm.md).
-2. **Primer modelo sencillo, sin relaciones** — mapear una clase propia con Hibernate ORM y crear el esquema al iniciar. Sin servidor web, repositorios, servicios ni formularios. Aplicación: [P2 Primer modelo](p2-PrimerModelo/README.md).
-3. **Configuración de persistencia e Hibernate** — conexión de la aplicación a una base de datos local y opciones de gestión del esquema. Material: [guía de configuración de Hibernate](p1-orm/02-configuracion-hibernate.md).
+2. **Primer modelo sencillo, sin relaciones** — mapear una clase propia con Hibernate ORM y crear el esquema al iniciar. Sin servidor web, repositorios, servicios ni formularios. Ejemplo: [P2 Primer modelo](p2-PrimerModelo/README.md). Práctica: [U4P2](practicas/U4P2/README.md).
+3. **Primera aplicación de persistencia** — conectar Spring Boot a MariaDB e integrar modelo, repositorio, servicio, controlador y vista en un caso completo, sin relaciones entre entidades. Material: [DriversBD](p3-inventario-videojuegos/DriversBD.md). Proyecto: [Inventario de videojuegos](p3-inventario-videojuegos/README.md).
 4. **Operaciones de persistencia y consultas iniciales** — repositorios, operaciones básicas y formas de expresar consultas. Se estudian juntas para que las consultas se entiendan en el contexto de la recuperación y modificación de datos.
 5. **Integración web, validación y reglas de la aplicación** — conectar operaciones reales con las vistas y formularios que hagan falta; separar los datos de entrada de las entidades y situar las validaciones y reglas en la capa apropiada.
 6. **Segundo modelo: relaciones y estructuras más complejas** — después de conocer el mapeo básico y las consultas iniciales, ampliar el modelo con relaciones entre entidades.
@@ -19,7 +19,10 @@ El orden es una propuesta de organización, no un enunciado cerrado. En especial
 
 - `p1-orm`: guías de estudio para el alumnado; la presentación se añadirá aparte.
 - `p2-PrimerModelo`: aplicación Spring Boot mínima con una entidad Hibernate y creación automática del esquema en H2 local. No incluye capa web ni operaciones de datos.
+- `practicas/U4P2`: práctica en dos apartados para generar el esquema desde un modelo formal y mapear entidades a partir de SQL.
+- `p3-primera-aplicacion-persistencia`: material inicial sobre los drivers de bases de datos y la elección de MariaDB como motor de referencia.
+- `p3-inventario-videojuegos`: aplicación completa para consultar y dar de alta juegos en el inventario de una tienda, con MariaDB.
 
-Las guías no prescriben un único motor de base de datos. Cada estudiante podrá utilizar una base de datos relacional disponible localmente; los ejemplos de clase podrán elegir un motor de referencia y señalar sus diferencias cuando importen.
+MariaDB será el motor de referencia a partir de P3. MySQL y PostgreSQL se podrán comparar más adelante, cuando el flujo completo de persistencia ya sea conocido.
 
-La configuración avanzada de Hibernate y las decisiones sobre esquemas se estudian en el apartado 3.
+La configuración de Hibernate y los modos de gestión del esquema se introducen antes de P3; la guía correspondiente está en `p1-orm/02-configuracion-hibernate.md`.

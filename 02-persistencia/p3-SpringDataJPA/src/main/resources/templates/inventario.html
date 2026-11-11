@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<!-- Página SSR: Thymeleaf inserta datos del Model MVC y conserva escapado HTML en th:text. -->
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#11130f">
+    <title>Checkpoint — Inventario de videojuegos</title>
+    <link rel="stylesheet" th:href="@{/css/inventario.css}">
+</head>
+<body>
+<div class="site-shell">
+    <header class="topbar">
+        <a class="brand" th:href="@{/}" aria-label="Checkpoint, inicio">
+            <span class="brand-mark" aria-hidden="true">C!</span>
+            <span>CHECKPOINT<span class="brand-sub">VIDEO GAME STORE</span></span>
+        </a>
+        <div class="connection-status">
+            <span class="status-light" aria-hidden="true"></span>
+            <span>INVENTARIO ONLINE</span>
+        </div>
+    </header>
+
+    <main>
+        <section class="intro">
+            <div class="intro-copy">
+                <p class="kicker"><span>01</span> · BACK OFFICE / STOCK</p>
+                <h1>El catálogo<br><em>está en juego.</em></h1>
+                <p class="intro-text">
+                    Cada copia cuenta. Consulta lo que hay en tienda y registra
+                    nuevas llegadas en el inventario.
+                </p>
+                <a class="jump-link" href="#nuevo-juego">
+                    <span aria-hidden="true">↓</span> Añadir una nueva entrada
+                </a>
+            </div>
+            <div class="intro-art" aria-hidden="true">
+                <div class="art-sun"></div>
+                <div class="art-disc disc-one"></div>
+                <div class="art-disc disc-two"></div>
+                <div class="art-disc disc-three"></div>
+                <div class="art-label">INSERT<br>COIN</div>
+                <div class="art-caption">SAVE YOUR<br>PROGRESS</div>
+                <div class="art-grid"></div>
+            </div>
+        </section>
+
+        <section class="inventory-section" aria-labelledby="inventory-title">
+            <div class="section-heading">
+                <div>
+                    <p class="kicker">LO QUE HAY EN LA ESTANTERÍA</p>
+                    <h2 id="inventory-title">Inventario <span class="heading-slash">//</span> <span
+                            th:text="${#lists.size(videojuegos)}">0</span> títulos</h2>
+                </div>
+                <span class="heading-stamp">ALL GAMES<br>ALL SYSTEMS</span>
+            </div>
+
+            <div class="notice success" role="status" th:if="${mensajeExito}" th:text="${mensajeExito}">
+                Juego añadido al inventario.
+            </div>
+
+            <div class="empty-state" th:if="${#lists.isEmpty(videojuegos)}">
+                <span class="empty-icon" aria-hidden="true">?</span>
+                <div>
+                    <h3>La estantería está esperando.</h3>
+                    <p>Aún no hay juegos registrados. Añade el primero desde el formulario de abajo.</p>
+                </div>
+            </div>
+
+            <div class="game-grid" th:unless="${#lists.isEmpty(videojuegos)}">
+                <!-- th:each convierte la lista recibida del controlador en una ficha por videojuego. -->
+                <article class="game-card" th:each="juego, iteracion : ${videojuegos}">
+                    <div class="game-art" th:classappend="${'art-variant-' + (iteracion.index % 5)}">
+                        <span class="art-index" th:text="${#numbers.formatInteger(iteracion.index + 1, 2)}">01</span>
+                        <span class="art-console" th:text="${juego.plataforma}">PLATAFORMA</span>
+                        <span class="art-initial" th:text="${#strings.substring(juego.titulo, 0, 1)}">G</span>
+                        <span class="art-bottom" th:text="${juego.genero}">GÉNERO</span>
+                    </div>
+                    <div class="game-info">
+                        <div class="game-title-line">
+                            <h3 th:text="${juego.titulo}">Título del videojuego</h3>
+                            <span class="game-price"
+                                  th:text="${#numbers.formatDecimal(juego.precio, 1, 'COMMA', 2, 'POINT')} + ' €'">0,00 €</span>
+                        </div>
+                        <div class="game-meta">
+                            <span th:text="${juego.plataforma}">Plataforma</span>
+                            <span class="meta-dot" aria-hidden="true">·</span>
+                            <span th:text="${juego.genero}">Género</span>
+                        </div>
+                        <div class="stock-line">
+                            <span class="stock-label">UNIDADES</span>
+                            <span class="stock-value" th:text="${juego.stock}">0</span>
+                            <span class="stock-state" th:classappend="${juego.stock == 0 ? ' sold-out' : ''}"
+                                  th:text="${juego.stock == 0 ? 'AGOTADO' : 'EN STOCK'}">EN STOCK</span>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <!-- El formulario va debajo del listado para seguir el recorrido GET → lista → POST. -->
+        <section class="form-section" id="nuevo-juego" aria-labelledby="form-title">
+            <div class="form-aside">
+                <p class="kicker">NUEVA ENTRADA / 02</p>
+                <h2>¿Qué juego<br>ha llegado?</h2>
+                <p>Rellena la ficha y guárdala en el inventario de la tienda.</p>
+                <div class="form-aside-note">
+                    <span class="note-symbol" aria-hidden="true">+</span>
+                    <span>Los cambios se guardan<br>en la base de datos.</span>
+                </div>
+            </div>
+
+            <div class="form-panel">
+                <div class="form-panel-head">
+                    <div>
+                        <p class="kicker">FICHA DE PRODUCTO</p>
+                        <h2 id="form-title">Registrar videojuego</h2>
+                    </div>
+                    <span class="form-code">FORM_001</span>
+                </div>
+
+                <!--
+                    th:object enlaza los controles con el formulario Java.
+                    El navegador envía un POST; el controlador valida antes de llamar al servicio.
+                -->
+                <form th:action="@{/videojuegos}" th:object="${nuevoVideojuego}" method="post">
+                    <!-- #fields necesita estar dentro del contexto definido por th:object. -->
+                    <div class="notice error-summary" role="alert" th:if="${#fields.hasErrors('*')}">
+                        <strong>Hay datos que revisar antes de guardar:</strong>
+                        <ul>
+                            <li th:each="error : ${#fields.errors('*')}" th:text="${error}">Error del formulario</li>
+                        </ul>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="field field-wide">
+                            <label for="titulo">Nombre del juego <span>*</span></label>
+                            <input id="titulo" type="text" th:field="*{titulo}"
+                                   maxlength="120" placeholder="Ej. The Legend of Zelda"
+                                   required th:errorclass="invalid">
+                            <p class="field-error" th:errors="*{titulo}"></p>
+                        </div>
+
+                        <div class="field">
+                            <label for="plataforma">Plataforma <span>*</span></label>
+                            <select id="plataforma" th:field="*{plataforma}" required th:errorclass="invalid">
+                                <option value="">Elige plataforma</option>
+                                <option th:each="opcion : ${plataformas}"
+                                        th:value="${opcion}" th:text="${opcion}">Plataforma</option>
+                            </select>
+                            <p class="field-error" th:errors="*{plataforma}"></p>
+                        </div>
+
+                        <div class="field">
+                            <label for="genero">Género <span>*</span></label>
+                            <select id="genero" th:field="*{genero}" required th:errorclass="invalid">
+                                <option value="">Elige género</option>
+                                <option th:each="opcion : ${generos}"
+                                        th:value="${opcion}" th:text="${opcion}">Género</option>
+                            </select>
+                            <p class="field-error" th:errors="*{genero}"></p>
+                        </div>
+
+                        <div class="field">
+                            <label for="precio">Precio de venta <span>*</span></label>
+                            <div class="input-with-suffix">
+                                <input id="precio" type="number" th:field="*{precio}"
+                                       min="0" max="999999.99" step="0.01"
+                                       placeholder="59.99" required th:errorclass="invalid">
+                                <span>EUR</span>
+                            </div>
+                            <p class="field-error" th:errors="*{precio}"></p>
+                        </div>
+
+                        <div class="field">
+                            <label for="stock">Unidades en tienda <span>*</span></label>
+                            <input id="stock" type="number" th:field="*{stock}"
+                                   min="0" max="9999" step="1"
+                                   placeholder="12" required th:errorclass="invalid">
+                            <p class="field-error" th:errors="*{stock}"></p>
+                        </div>
+                    </div>
+
+                    <div class="form-footer">
+                        <p><span>*</span> Campos obligatorios. El stock puede ser cero.</p>
+                        <button class="submit-button" type="submit">
+                            <span>Guardar en inventario</span>
+                            <span class="button-arrow" aria-hidden="true">↗</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <span>CHECKPOINT / STOCK CONTROL</span>
+        <span>MADE FOR PLAYERS <b aria-hidden="true">✳</b></span>
+    </footer>
+</div>
+</body>
+</html>
